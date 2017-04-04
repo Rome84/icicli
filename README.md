@@ -15,6 +15,8 @@
 
 # IcingaCli
 
+[![Build Status](https://travis-ci.org/kuznero/icicli.svg?branch=master)](https://travis-ci.org/kuznero/icicli)
+
 Icinga 2 command line interface.
 
 ## Developer Environment
