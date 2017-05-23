@@ -2,7 +2,7 @@
 # For more information, see: http://docs.haskellstack.org/en/stable/yaml_configuration/
 
 # Specifies the GHC version and set of packages available (e.g., lts-3.5, nightly-2015-09-21, ghc-7.10.2)
-resolver: lts-8.2
+resolver: lts-8.13
 
 # Local packages, usually specified by relative directory name
 packages:
@@ -39,7 +39,7 @@ nix:
   # false by default. Must be present and set to `true` to enable Nix.
   # You can set set it in your `$HOME/.stack/config.yaml` to enable
   # Nix for all your projects without having to repeat it
-  enable: false
+  enable: true
 
   # true by default. Tells Nix whether to run in a pure shell or not.
   pure: false
