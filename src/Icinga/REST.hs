@@ -13,8 +13,6 @@ import Control.Monad.Catch
 import Data.CaseInsensitive (CI, mk)
 import Network.Connection (TLSSettings (..))
 import Network.HTTP.Conduit
-import Network.HTTP.Client (defaultProxy, managerSetProxy)
-import Network.HTTP.Client.TLS (newTlsManagerWith)
 import Network.HTTP.Types (RequestHeaders)
 import qualified Data.ByteString.Char8 as B
 import qualified Data.ByteString.Lazy as LB
@@ -66,10 +64,7 @@ buildRequest method url creds headers body = apply <$> parseUrlThrow url
     apply = applyMethod method . applyAuth creds . applyHeaders headers . applyBody body . applyThrowOnError False
 
 buildManager :: IO Manager
-buildManager = do
-  let settings' = mkManagerSettings (TLSSettingsSimple True False False) Nothing
-  let settings = managerSetProxy defaultProxy settings'
-  newTlsManagerWith settings
+buildManager = newManager $ mkManagerSettings (TLSSettingsSimple True False False) Nothing
 
 request :: HTTPMethod -> URL -> Maybe Credentials -> RequestHeaders -> Maybe RequestBody -> IO (Response LB.ByteString)
 request method url creds headers body = do

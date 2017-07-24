@@ -5,9 +5,9 @@ let
   inherit (nixpkgs) pkgs;
 
   f = { mkDerivation, aeson, aeson-pretty, base, bytestring
-      , case-insensitive, connection, containers, exceptions, http-client
-      , http-client-tls, http-conduit, http-types, HUnit, mtl, network
-      , parsec, stdenv, transformers
+      , case-insensitive, connection, containers, exceptions
+      , http-conduit, http-types, HUnit, mtl, network, parsec, stdenv
+      , transformers
       , ghc-mod, hlint, hoogle, hindent, stylish-haskell
       }:
       mkDerivation {
@@ -18,8 +18,7 @@ let
         isExecutable = true;
         libraryHaskellDepends = [
           aeson aeson-pretty base bytestring case-insensitive connection
-          containers exceptions http-client http-client-tls http-conduit
-          http-types
+          containers exceptions http-conduit http-types
         ];
         executableHaskellDepends = [
           base containers mtl network parsec transformers
