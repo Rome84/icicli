@@ -74,7 +74,7 @@ debug _ = return ()
 #endif
 
 prettyConfig :: Config
-prettyConfig = Config (Spaces 2) mempty Generic
+prettyConfig = Config (Spaces 2) mempty Generic True
 
 deleteBody :: Setup -> String
 deleteBody Setup { routingKey = Nothing } = "{ \"attrs\": null }"
