@@ -1,4 +1,4 @@
-{ nixpkgs ? import <nixpkgs> {}, compiler ? "default" }:
+{ nixpkgs ? import <nixpkgs> {}, compiler ? "ghc821" }:
 
 let
 
@@ -24,7 +24,7 @@ let
           base containers mtl network parsec transformers
         ];
         buildDepends = [
-          ghc-mod
+          # ghc-mod
           hindent
           hlint
           hoogle
