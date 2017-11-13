@@ -1,47 +1,28 @@
-{ nixpkgs ? import <nixpkgs> {}, compiler ? "ghc821" }:
+{ compiler ? "ghc821"
+, withHoogle ? true
+}:
 
 let
-
-  inherit (nixpkgs) pkgs;
-
-  f = { mkDerivation, aeson, aeson-pretty, base, bytestring
-      , case-insensitive, connection, containers, exceptions
-      , http-conduit, http-types, HUnit, mtl, network, parsec, stdenv
-      , transformers
-      , ghc-mod, hlint, hoogle, hindent, stylish-haskell
-      }:
-      mkDerivation {
-        pname = "icicli";
-        version = "0.1.0.0";
-        src = ./.;
-        isLibrary = true;
-        isExecutable = true;
-        libraryHaskellDepends = [
-          aeson aeson-pretty base bytestring case-insensitive connection
-          containers exceptions http-conduit http-types
-        ];
-        executableHaskellDepends = [
-          base containers mtl network parsec transformers
-        ];
-        buildDepends = [
-          # ghc-mod
-          hindent
-          hlint
-          hoogle
-          stylish-haskell
-        ];
-        testHaskellDepends = [ aeson base bytestring HUnit ];
-        homepage = "https://github.com/kuznero/icicli#readme";
-        description = "Icinga 2 terminal client";
-        license = stdenv.lib.licenses.bsd3;
-      };
-
-  haskellPackages = if compiler == "default"
-                       then pkgs.haskellPackages
-                       else pkgs.haskell.packages.${compiler};
-
-  drv = haskellPackages.callPackage f {};
-
+  bootstrap = import <nixpkgs> {};
+  nixpkgs = builtins.fromJSON (builtins.readFile ./nixpkgs.json);
+  src = bootstrap.fetchFromGitHub {
+    owner = "NixOS";
+    repo  = "nixpkgs";
+    inherit (nixpkgs) rev sha256;
+  };
+  pkgs = import src {};
+  f = import ./default.nix;
+  packageSet = pkgs.haskell.packages.${compiler};
+  hspkgs = (
+    if withHoogle then
+      packageSet.override {
+        overrides = (self: super: {
+          ghc = super.ghc // { withPackages = super.ghc.withHoogle; };
+          ghcWithPackages = self.ghc.withPackages;
+        });
+      }
+      else packageSet
+  );
+  drv = hspkgs.callPackage f {};
 in
-
   if pkgs.lib.inNixShell then drv.env else drv
